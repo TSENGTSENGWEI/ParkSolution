@@ -65,8 +65,8 @@ namespace ParkSolution
 
         public int GetParkMin(DateTime Timein, DateTime Timeout)
         {
-            Timeout = Timeout.AddSeconds(-Timeout.Second);
-            Timein = Timein.AddSeconds(-Timein.Second);
+            Timeout = Timeout.AddSeconds(-Timeout.Second).AddMilliseconds(-Timeout.Millisecond);
+            Timein = Timein.AddSeconds(-Timein.Second).AddMilliseconds(-Timein.Millisecond);
             var TimeSpan = Timeout - Timein;
             var DayofMin = TimeSpan.Minutes;
 
