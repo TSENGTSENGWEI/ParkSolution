@@ -13,11 +13,12 @@ namespace ParkSolution
             Timeout = Timeout.AddSeconds(-Timeout.Second).AddMilliseconds(-Timeout.Millisecond);
             Timein = Timein.AddSeconds(-Timein.Second).AddMilliseconds(-Timein.Millisecond);
 
-            var TimeSpan = Timeout - Timein;
-            var DayofMin = TimeSpan.Minutes;
+            
+            Span = Timeout - Timein;
+            var DayofMin = Span.Minutes;
             
 
-            if (TimeSpan.Hours > 0) DayofMin = DayofMin + (60 * TimeSpan.Hours);
+            if (Span.Hours > 0) DayofMin = DayofMin + (60 * Span.Hours);
 
             return DayofMin;
         }
