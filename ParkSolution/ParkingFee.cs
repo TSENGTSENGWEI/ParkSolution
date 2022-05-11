@@ -13,12 +13,12 @@ namespace ParkSolution
         public ParkingFee(DateTime start, DateTime end, ICalcFee UseFee)
         {
             _usefee = UseFee;
-            items = CalFeeForMultiDay(start, end);
-            TotalFee = items.Sum(x => x.Fee);
-            TotalDays = items.Count();
+            Items = CalFeeForMultiDay(start, end);
+            TotalFee = Items.Sum(x => x.Fee);
+            TotalDays = Items.Count();
         }
 
-        public IEnumerable<SingleDayFee> items { get; set; }
+        public IEnumerable<SingleDayFee> Items { get; set; }
         public int TotalFee { get; set; }
         public int TotalDays { get; set; }
 
@@ -27,11 +27,11 @@ namespace ParkSolution
             //判斷大小關係
             if (start > end) throw new ArgumentException("輸出時間大於輸入時間");
             //計算天數
-            var DayList = new List<SingleDayFee>();
+            var dayList = new List<SingleDayFee>();
 
             while (start.Date != end.Date)
             {
-                DayList.Add(new SingleDayFee()
+                dayList.Add(new SingleDayFee()
                 {
                     StartTime = start,
                     EndTime = start.Add(-start.TimeOfDay).AddDays(1).AddMinutes(-1), //23:59
@@ -41,19 +41,19 @@ namespace ParkSolution
                 start = start.Add(-start.TimeOfDay).AddDays(1);//00:00
             }
 
-            DayList.Add(new SingleDayFee() //00:00-Timeout
+            dayList.Add(new SingleDayFee() //00:00-Timeout
             {
                 StartTime = start,
                 EndTime = end,
                 Fee = 0
             });
 
-            foreach (var SingleFee in DayList)
+            foreach (var SingleFee in dayList)
             {
                 SingleFee.Fee = _usefee.CalcFee(SingleFee.StartTime, SingleFee.EndTime);
             }
 
-            return DayList;
+            return dayList;
         }
     }
 }

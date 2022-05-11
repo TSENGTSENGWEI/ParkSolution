@@ -15,35 +15,51 @@ namespace ParkSolution
 
             if (Timein.DayOfWeek != DayOfWeek.Saturday && Timein.DayOfWeek != DayOfWeek.Sunday)//平日
             {
-                switch (DayOfMin)
-                {
-                    case <= 0:
-                        DayOfFee = 0;
-                        break;
-
-                    case <= 59:
-                        DayOfFee = 20;
-                        break;
-
-                    case >= 60:
-                        var Rate = 20;
-
-                        while (DayOfMin > 0)
-                        {
-                            DayOfFee = DayOfFee + Rate;
-                            DayOfMin = DayOfMin - 60;
-                            if (Rate < 30) Rate = Rate + 10;
-                        }
-
-                        if (DayOfFee > 300) DayOfFee = 300; //超過一天
-                        break;
-                }
+                DayOfFee = GetWeekdayFee(DayOfMin);
             }
             else
             {
-                DayOfFee = 0;
+                DayOfFee = GetHolidayFee(DayOfMin);
             }
 
+            return DayOfFee;
+        }
+
+        private int GetHolidayFee(int DayOfMin)
+        {
+            return 0;//假日免費
+        }
+
+        private int GetWeekdayFee(int DayOfMin)
+        {
+            var DayOfFee = 0;
+            var DayOfMaxFee = 300;
+            var HourFee = 20;
+            var AddFeeRate = 10;
+            var HourFeeMax = 30;
+
+            switch (DayOfMin)
+            {
+                case <= 0:
+                    DayOfFee = 0;
+                    break;
+
+                case <= 59:
+                    DayOfFee = HourFee;
+                    break;
+
+                case >= 60:
+
+                    while (DayOfMin > 0)
+                    {
+                        DayOfFee = DayOfFee + HourFee;
+                        DayOfMin = DayOfMin - 60;
+                        if (HourFee < HourFeeMax) HourFee = HourFee + AddFeeRate;
+                    }
+
+                    if (DayOfFee > DayOfMaxFee) DayOfFee = DayOfMaxFee; //超過一天
+                    break;
+            }
             return DayOfFee;
         }
 

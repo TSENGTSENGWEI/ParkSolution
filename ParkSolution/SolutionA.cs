@@ -11,6 +11,10 @@ namespace ParkSolution
         public int CalcFee(DateTime Timein, DateTime Timeout)
         {
             var DayOfFee = 0;
+            var HourFee = 10;
+            var HalfHourFee = 7;
+            var DayOfMaxFee = 50;
+
             var DayOfMin = GetParkMin(Timein, Timeout);
             switch (DayOfMin)
             {
@@ -19,24 +23,24 @@ namespace ParkSolution
                     break;
 
                 case <= 30:
-                    DayOfFee = 7;
+                    DayOfFee = HalfHourFee;
                     break;
 
                 case <= 59:
-                    DayOfFee = 10;
+                    DayOfFee = HourFee;
                     break;
 
                 case >= 60:
                     var Hour = DayOfMin / 60;
-                    DayOfFee = DayOfFee + Hour * 10;
+                    DayOfFee = DayOfFee + Hour * HourFee;
                     var Min = DayOfMin % 60;
                     if (Min != 0)
                     {
-                        if (Min > 30) DayOfFee = DayOfFee + 10;
-                        else DayOfFee = DayOfFee + 7;
+                        if (Min > 30) DayOfFee = DayOfFee + HourFee;
+                        else DayOfFee = DayOfFee + HalfHourFee;
                     }
 
-                    if (DayOfFee > 50) DayOfFee = 50; //超過一天
+                    if (DayOfFee > DayOfMaxFee) DayOfFee = DayOfMaxFee; //超過一天
                     break;
             }
             return DayOfFee;
@@ -44,6 +48,7 @@ namespace ParkSolution
 
         public int GetParkMin(DateTime Timein, DateTime Timeout)
         {
+            //
             Timeout = Timeout.AddSeconds(-Timeout.Second);
             Timein = Timein.AddSeconds(-Timein.Second);
             var TimeSpan = Timeout - Timein;
